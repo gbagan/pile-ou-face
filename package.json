@@ -19,7 +19,6 @@
     "vite": "^8.0.12"
   },
   "dependencies": {
-    "@gbagan/rng": "^0.1.0",
     "@gbagan/utils": "^1.5.0"
   }
 }
