@@ -9,8 +9,6 @@
   let draw = new Draw();
   let currentPiece: null | number = $state.raw(null);
 
-  //let nbPiles = $derived(Math.round(count(draw, d => d === 0) * 100 / draw.length));
-
   async function drawPiece(val: 0 | 1) {
     if (draw.coins.length >= DRAW_LENGTH) return;
     currentPiece = draw.coins.length;
@@ -25,10 +23,12 @@
 
   async function simulate() {
     draw.reset();
+    const random = new Uint32Array(DRAW_LENGTH);
+    crypto.getRandomValues(random);
     for (let i = 0; i < 40; i++) {
       await sleep(70);
       for (let j = 0; j < 5; j++) {
-        draw.toss(Math.random() < 0.5 ? 0 : 1);
+        draw.toss((random[5 * i + j] & 1) as 0 | 1);
       }
     }
   }
