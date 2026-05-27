@@ -1,12 +1,74 @@
+class Markov {
+  #coins: (0 | 1)[];
+  #order: number;
+  #table: Record<string, [number, number]> = {};
+
+  constructor(order: number, coins: (0 | 1)[]) {
+    this.#coins = coins;
+    this.#order = order;
+  }
+
+  reset() {
+    this.#table = {};
+  }
+
+  #key() {
+    if (this.#coins.length < this.#order) return null;
+    return this.#coins.slice(-this.#order).join('');
+  }
+
+  update(coin: 0 | 1) {
+    const key = this.#key();
+    if (!key) return;
+    const table = this.#table;
+    if (!table[key]) table[key] = [0, 0];
+    table[key][coin]++;
+  }
+
+  predict(): 0 | 1 | null {
+    const key = this.#key();
+    if (!key) return null;
+    const table = this.#table;
+    if (!table[key]) return null;
+    const p0 = table[key][0];
+    const p1 = table[key][1];
+    const t = p0 + p1;
+    if (t === 0) return null;
+    return p1 >= 0.5 * t ? 1 : 0;
+  }
+}
+
+
 export class Draw {
   coins: (0 | 1)[] = $state([]);
   #lastTailsSequence = 0;
   #lastHeadsSequence = 0;
   largestSequence = $state.raw(0);
   #headsCount = $state.raw(0);
+  #predictedCount = $state.raw(0);
+  #markov1: Markov;
+  #markov2: Markov;
+  #markov3: Markov;
+
+  constructor() {
+    this.#markov1 = new Markov(1, this.coins);
+    this.#markov2 = new Markov(2, this.coins);
+    this.#markov3 = new Markov(3, this.coins);
+  }
+
+  #predict(): 0 | 1 {
+    return this.#markov3.predict() ?? this.#markov2.predict() ?? this.#markov1.predict() ?? 0; 
+  }
 
   toss(coin: 0 | 1) {
+    let prediction = this.#predict();
+    if (coin === prediction) {
+      this.#predictedCount += 1;
+    }
     this.coins.push(coin);
+    this.#markov1.update(coin);
+    this.#markov2.update(coin);
+    this.#markov3.update(coin);
     if (coin === 0) {
       this.#headsCount += 1;
       this.#lastHeadsSequence += 1;
@@ -24,10 +86,25 @@ export class Draw {
     this.#lastTailsSequence = 0;
     this.#lastHeadsSequence = 0;
     this.#headsCount = 0;
+    this.#predictedCount = 0;
     this.largestSequence = 0;
+    this.#markov1.reset();
+    this.#markov2.reset();
+    this.#markov3.reset();
   }
 
-  headsPercent() {
-    return this.coins.length === 0 ? 50 : Math.round(100 * this.#headsCount / this.coins.length);
+  headsRate() {
+    return this.coins.length === 0 ? 0.5 : this.#headsCount / this.coins.length;
+  }
+
+  longRunRate() {
+    if (this.coins.length <= 1) {
+      return 0.5;
+    }
+    return this.largestSequence / Math.min(17, this.coins.length);
+  }
+
+  predictedRate() {
+    return this.coins.length === 0 ? 0.5 : this.#predictedCount / this.coins.length;
   }
 }

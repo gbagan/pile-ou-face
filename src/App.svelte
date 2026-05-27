@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { count, divMod, range, sleep } from "@gbagan/utils";
+  import { divMod, range, sleep } from "@gbagan/utils";
+  import { runThresholds, thresholds } from "./lib/thresholds";
   import { Draw } from "./lib/Draw.svelte";
   import Stats from "./components/Stats.svelte";
 
@@ -51,13 +52,25 @@
       </filter>
     </defs>
     <g style:transform="translate(70px, 10px)">
-      <Stats text="Pile {draw.headsPercent()}% - Face {100 - draw.headsPercent()}%"/>
+      <Stats
+        text="Pile {Math.round(100 * draw.headsRate())}% - Face {100 - Math.round(100 * draw.headsRate())}%"
+        thresholds={thresholds[draw.coins.length]}
+        needle={draw.headsRate()}
+      />
     </g>
     <g style:transform="translate(350px, 10px)">
-      <Stats text="Plus long run: {draw.largestSequence}"/>
+      <Stats
+        text="Plus long run: {draw.largestSequence}"
+        thresholds={runThresholds[draw.coins.length]}
+        needle={draw.longRunRate()} 
+      />
     </g>
     <g style:transform="translate(630px, 10px)">
-      <Stats text="Incompressibilité"/>
+      <Stats
+        text="Prédictibilité {Math.round(100 * draw.predictedRate())}%"
+        thresholds={thresholds[draw.coins.length]}
+        needle={draw.predictedRate()}
+      />
     </g>
     <image
       href={draw.coins.length === 0 ? "./empty-basket.webp" : "./full-basket.webp"}

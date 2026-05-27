@@ -1,9 +1,11 @@
 <script lang="ts">
   type Props = {
     text: string;
+    thresholds: [number, number, number, number];
+    needle: number
   }
 
-  let { text }: Props = $props();
+  let { text, thresholds, needle }: Props = $props();
 
   function polarToCartesian(centerX: number, centerY: number, radius: number, angle: number): [number, number] {
     return [ centerX + radius * Math.cos(angle), centerY + radius * Math.sin(angle) ];
@@ -35,16 +37,23 @@
 <rect x="0" y="0" width="250" height="150" rx="20" ry="20" fill="black "/>
 <rect x="15" y="15" width="220" height="100" rx="15" ry="15" fill="white" />
 <text x="125" y="140" fill="white" text-anchor="middle">{text}</text>
-{@render wheelPart(0, 0.3, "red")}
-{@render wheelPart(0.3, 0.4, "orange")}
-{@render wheelPart(0.4, 0.6, "green")}
-{@render wheelPart(0.6, 0.7, "orange")}
-{@render wheelPart(0.7, 1, "red")}
+{@render wheelPart(0, thresholds[0], "red")}
+{@render wheelPart(thresholds[0], thresholds[1], "orange")}
+{@render wheelPart(thresholds[1], thresholds[2], "green")}
+{@render wheelPart(thresholds[2], thresholds[3], "orange")}
+{@render wheelPart(thresholds[3], 1, "red")}
 <rect
   x="-1"
   y="-1"
   width="70" height="2"
-  style:transform="translate(124px, 110px) rotate(-90deg)"
+  style:transform="translate(124px, 110px) rotate({-180+180*needle}deg)"
   fill="url(#metal)"
   filter="url(#shadow)"
+  class="needle"
 />
+
+<style>
+  .needle {
+    transition: transform 300ms linear;
+  }
+</style>
