@@ -8,9 +8,10 @@
   
   let draw = new Draw();
   let currentPiece: null | number = $state.raw(null);
+  let locked = $state.raw(false);
 
   async function drawPiece(val: 0 | 1) {
-    if (draw.coins.length >= DRAW_LENGTH) return;
+    if (locked || draw.coins.length >= DRAW_LENGTH) return;
     currentPiece = draw.coins.length;
     draw.toss(val);
     await sleep(0);
@@ -18,10 +19,13 @@
   }
 
   function reset() {
+    if (locked) return;
     draw.reset();
   }
 
   async function simulate() {
+    if (locked) return;
+    locked = true;
     draw.reset();
     const random = new Uint32Array(DRAW_LENGTH);
     crypto.getRandomValues(random);
@@ -31,6 +35,7 @@
         draw.toss((random[5 * i + j] & 1) as 0 | 1);
       }
     }
+    locked = false;
   }
 
 </script>
@@ -76,6 +81,7 @@
       href={draw.coins.length === 0 ? "./empty-basket.webp" : "./full-basket.webp"}
       width="120"
       height="120"
+      style:cursor="pointer"
       style:transform="translate(50px, 480px)"
       onclick={reset}
     />
@@ -83,6 +89,7 @@
       href="./pile.webp"
       width="120"
       height="120"
+      style:cursor="pointer"
       style:transform="translate(300px, 480px)"
       onclick={() => drawPiece(0)}
     />
@@ -91,12 +98,14 @@
       width="120"
       height="120"
       style:transform="translate(500px, 480px)"
+      style:cursor="pointer"
       onclick={() => drawPiece(1)}
     />
     <image
       href="./dice.webp"
       width="120"
       height="120"
+      style:cursor="pointer"
       style:transform="translate(750px, 480px)"
       onclick={simulate}
     />
@@ -149,5 +158,6 @@
 
   .piece {
     transition: transform linear 500ms;
+    pointer-events: none;
   }
 </style>
