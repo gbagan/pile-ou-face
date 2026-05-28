@@ -67,7 +67,7 @@ export class Draw {
   }
 
   longRunRate() {
-    return this.#coins.length <= 1 ? 0.5 : this.#largestSequence / Math.min(17, this.#coins.length);
+    return this.#coins.length <= 1 ? 0.5 : Math.min(17, this.#largestSequence) / Math.min(17, this.#coins.length);
   }
 
   predictedRate() {

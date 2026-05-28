@@ -72,18 +72,15 @@ def run_thresholds(n):
     or_ = 0
     for i in range(0, 17):
         if pr(n, i) > 0.99 and pr(n, i+1) <= 0.99:
-            ro = i + 0.5
+            ro = max(0, i - 0.5)
         if pr(n, i) > 0.95 and pr(n, i+1) <= 0.95:
-            ov = i + 0.5
+            ov = max(0, i - 0.5)
         if pr(n, i) >= 0.05 and pr(n, i+1) < 0.05:
-            vo = i + 0.5
+            vo = min(i + 0.5, n)
         if pr(n, i) >= 0.01 and pr(n, i+1) < 0.01:
-            or_ = i + 0.5
-    if vo > n:
-        vo = n
-    if or_ > n:
-        or_ = n
-    m = min([n, 17])
+            or_ = min(i + 0.5, n)
+            break
+    m = min(n, 17)
     return (ro/m, ov/m, vo/m, or_/m)
 
 print("export const runThresholds: [number, number, number, number][] = [");
