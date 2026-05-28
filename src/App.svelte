@@ -1,7 +1,7 @@
 <script lang="ts">
   import { divMod, range, sleep } from "@gbagan/utils";
   import { runThresholds, thresholds } from "./lib/thresholds";
-  import { Draw } from "./lib/Draw.svelte";
+  import { Draw } from "./lib/draw.svelte";
   import Stats from "./components/Stats.svelte";
 
   const DRAW_LENGTH = 200;
