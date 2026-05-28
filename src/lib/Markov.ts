@@ -1,9 +1,9 @@
 export class Markov {
-  #coins: (0 | 1)[];
+  #coins: readonly (0 | 1)[];
   #order: number;
   #table: Record<string, [number, number]> = {};
 
-  constructor(order: number, coins: (0 | 1)[]) {
+  constructor(order: number, coins: readonly (0 | 1)[]) {
     this.#coins = coins;
     this.#order = order;
   }
@@ -19,7 +19,7 @@ export class Markov {
 
   update(coin: 0 | 1) {
     const key = this.#key();
-    if (!key) return;
+    if (key === null) return;
     const table = this.#table;
     if (!table[key]) table[key] = [0, 0];
     table[key][coin]++;
@@ -27,9 +27,8 @@ export class Markov {
 
   predict(): 0 | 1 | null {
     const key = this.#key();
-    if (!key) return null;
     const table = this.#table;
-    if (!table[key]) return null;
+    if (key === null || !table[key]) return null;
     const p0 = table[key][0];
     const p1 = table[key][1];
     const t = p0 + p1;
