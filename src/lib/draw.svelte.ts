@@ -1,4 +1,4 @@
-import { Markov } from "./Markov";
+import { Markov } from "./markov";
 
 export class Draw {
   #coins: (0 | 1)[] = $state([]);
