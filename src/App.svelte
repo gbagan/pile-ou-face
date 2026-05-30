@@ -78,7 +78,7 @@
       />
     </g>
     <image
-      href={draw.coins.length === 0 ? "./empty-basket.webp" : "./full-basket.webp"}
+      href={draw.coins.length === 0 ? "./empty-basket.avif" : "./full-basket.avif"}
       width="120"
       height="120"
       style:cursor="pointer"
@@ -86,7 +86,7 @@
       onclick={reset}
     />
     <image
-      href="./pile.webp"
+      href="./pile.avif"
       width="120"
       height="120"
       style:cursor="pointer"
@@ -94,7 +94,7 @@
       onclick={() => drawPiece(0)}
     />
     <image
-      href="./face.webp"
+      href="./face.avif"
       width="120"
       height="120"
       style:transform="translate(500px, 480px)"
@@ -102,7 +102,7 @@
       onclick={() => drawPiece(1)}
     />
     <image
-      href="./dice.webp"
+      href="./dice.avif"
       width="120"
       height="120"
       style:cursor="pointer"
@@ -131,7 +131,7 @@
         : "translate(500px, 480px) scale(1)"
       }
       <image
-        href={d === 0 ? "./pile.webp" : "./face.webp"}
+        href={d === 0 ? "./pile.avif" : "./face.avif"}
         width="150"
         height="150"
         class="piece"
