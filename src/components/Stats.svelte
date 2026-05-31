@@ -1,5 +1,9 @@
 <script lang="ts">
-  const COLORS = ["green", "orange", "red"];
+  const COLORS = [
+    "var(--green-500)",
+    "var(--orange-400)",
+    "var(--red-500)"
+  ];
   
   type Props = {
     text: string;
@@ -40,13 +44,12 @@
   <path
     d={partDescription(125, 110, 40, 75, Math.PI*(1+start), Math.PI*(1+end))}
     fill={color}
-    stroke="black"
+    stroke="var(--slate-700)"
     stroke-width="1.5"
   />
 {/snippet}
 
-
-<rect x="0" y="0" width="250" height="150" rx="20" ry="20" fill="black "/>
+<rect x="0" y="0" width="250" height="150" rx="20" ry="20" fill="var(--slate-950)"/>
 <rect x="15" y="15" width="220" height="100" rx="15" ry="15" fill="white" />
 <text x="125" y="140" fill="white" text-anchor="middle">{text}</text>
 {@render wheelPart(0, thresholds[0], COLORS[2])}
@@ -64,7 +67,7 @@
   filter="url(#shadow)"
   class="needle"
 />
-<circle cx="30" cy="30" r="10" fill={color} stroke="black" stroke-width="1" />
+<circle cx="30" cy="30" r="10" fill={color} stroke="var(--slate-700)" stroke-width="1" />
 
 <style>
   .needle {
