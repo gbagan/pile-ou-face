@@ -5,8 +5,8 @@
   import { Markov } from "../lib/markov";
   import { lzw } from "../lib/lzw";
   import Button from "./Button.svelte";
-  import { onMount } from "svelte";
-    import Dialog from "./Dialog.svelte";
+  import { onMount, tick } from "svelte";
+  import Dialog from "./Dialog.svelte";
 
   type Props = {
     coins: (0 | 1)[];
@@ -94,8 +94,9 @@
     : 25
   );
 
-  function openDialog(d: "A" | "B" | "C" | "D") {
+  async function openDialog(d: "A" | "B" | "C" | "D") {
     dialog = d;
+    await tick();
     dialogEl.showModal();
   }
 
@@ -167,23 +168,23 @@
 </div>
 <dialog class="dialog" bind:this={dialogEl}>
   {#if dialog === "A"}
-    <Dialog title="Piles/Faces" onOk={closeDialog}>
+    <Dialog title="Piles/Faces" emoji="🪙" onOk={closeDialog}>
       Au hasard, piles et faces finissent toujours par s'équilibrer autour de 50% 🪙 <br/>
       Et plus tu lances, plus cet équilibre se confirme — c'est la loi des grands nombres !
     </Dialog>
   {:else if dialog === "B"}
-    <Dialog title="Plus long run" onOk={closeDialog}>
+    <Dialog title="Plus long run" emoji="🏃" onOk={closeDialog}>
       Un run, c'est une série de piles ou de faces à la suite — genre pile, pile, pile, pile 🏃<br/>
       Sur 100 lancers au hasard, le record de la partie se situe presque toujours entre 5 et 10.<br/>
       En dessous ou au-dessus ? Ta séquence cache peut-être quelque chose… 🧐
     </Dialog>
   {:else if dialog === "C"}
-    <Dialog title="Imprédictibilité" onOk={closeDialog}>
+    <Dialog title="Imprédictibilité" emoji="🔮" onOk={closeDialog}>
       L'appli espione tes lancers pour essayer de deviner le prochain 🔮 <br/>
       Mais si tu joues vraiment au hasard, elle ne fait pas mieux qu'un pile ou face… à 50/50 !
     </Dialog>
   {:else if dialog === "D"}
-    <Dialog title="Incompressibilité" onOk={closeDialog}>
+    <Dialog title="Incompressibilité" emoji="🗜️" onOk={closeDialog}>
       Imagine qu'on essaie de "zipper" ta séquence 🗜️ <br/>
       Si elle est vraiment aléatoire, impossible de la raccourcir — taux de compression : 0%.<br/>
       Dès qu'il y a des répétitions, ça se compresse… et ça se voit !<br/>
@@ -215,31 +216,6 @@
     width: 60rem;
   }
 
-  .buttons {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .buttons > .btn {
-    padding: 6px 14px;
-    border-radius: 999px;
-    border: 1.5px solid rgba(175,169,236,.35);
-    background: transparent;
-    color: #AFA9EC;
-    font-family: inherit;
-    font-size: 13px;
-    cursor: pointer;
-    transition: background .15s, color .15s, border-color .15s;
-
-    &:hover, &:active {
-      background: #7F77DD;
-      color: #fff;
-      border-color: #7F77DD;
-    }
-  }
-
   .dialog {
     position: fixed;
     left: 50%;
@@ -251,7 +227,7 @@
     border-radius: 20px;
     padding: 0;
     overflow: hidden;
-    /* animation: popIn .35s cubic-bezier(.34,1.56,.64,1); */
+    animation: popIn .35s cubic-bezier(.34,1.56,.64,1);
   }
 
   .dialog::backdrop {
@@ -259,8 +235,8 @@
   }
 
   @keyframes popIn {
-    from { transform: scale(.8); opacity: 0; }
-    to   { transform: scale(1);  opacity: 1; }
+    from { transform: translate(-50%, -50%) scale(.8); opacity: 0; }
+    to   { transform: translate(-50%, -50%) scale(1);  opacity: 1; }
   }
 </style>
 

@@ -4,14 +4,16 @@
 
   type Props = {
     title: string;
+    emoji: string;
     children: Snippet;
     onOk: () => void;
   }
 
-  let { title, children, onOk }: Props = $props();
+  let { title, emoji, children, onOk }: Props = $props();
 </script>
 
 <div class="dialog-header">
+  <p class="emoji">{emoji}</p>
   <p class="dialog-title">{title}</p>
 </div>
 <div class="dialog-body">
@@ -23,7 +25,7 @@
 
 <style>
   .dialog-header {
-    padding: 20px 20px 16px;
+    padding: 1.25rem 1.25rem 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,8 +33,8 @@
     text-align: center;
   }
 
-  .dialog-emoji {
-    font-size: 48px;
+  .emoji {
+    font-size: 3rem;
     animation: bounce 1s ease infinite;
   }
 
@@ -56,7 +58,7 @@
 
 .dialog-body {
   width: 65vmin;
-  padding: 0 20px 20px;
+  padding: 0 1.25rem 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -70,5 +72,10 @@
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
+  }
+
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-0.5rem); }
   }
 </style>

@@ -144,29 +144,29 @@
   .player {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.7rem;
   }
 
   .avatar {
-    width: 44px;
-    height: 44px;
+    width: 2.75rem;
+    height: 2.75rem;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 1.25rem;
     animation: float 3s ease-in-out infinite;
     flex-shrink: 0;
   }
 
   .player-name {
     font-weight: 500;
-    font-size: 15px;
+    font-size: 1rem;
     color: var(--color-text-primary, #111);
   }
 
   .level-label {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 500;
     transition: color 0.4s;
   }
@@ -176,7 +176,7 @@
   }
 
   .score-display {
-    font-size: 32px;
+    font-size: 2rem;
     font-weight: 500;
     line-height: 1;
     transition: color 0.4s;
@@ -184,7 +184,7 @@
   }
 
   .score-max {
-    font-size: 11px;
+    font-size: 0.7rem;
     color: var(--color-text-secondary, #666);
   }
 
@@ -194,7 +194,7 @@
 
   .bar-track {
     position: relative;
-    height: 28px;
+    height: 1.75rem;
     background: var(--color-background-secondary, #f0f0f0);
     border-radius: 999px;
     border: 0.5px solid var(--color-border-tertiary, rgba(0,0,0,.12));
@@ -213,15 +213,15 @@
   }
 
   .orb {
-    width: 36px;
-    height: 36px;
+    width: 2.25rem;
+    height: 2.25rem;
     border-radius: 50%;
     position: absolute;
-    right: -14px;
+    right: -0.85rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 1.1rem;
     z-index: 2;
     transition: background 0.4s, box-shadow 0.4s;
   }
@@ -238,15 +238,15 @@
     justify-content: space-between;
     margin-top: 5px;
     padding: 0 2px;
-    font-size: 11px;
+    font-size: 0.7rem;
     color: var(--color-text-tertiary, #999);
   }
 
   .milestone {
     display: inline-block;
-    font-size: 13px;
+    font-size: 0.8rem;
     font-weight: 500;
-    padding: 4px 12px;
+    padding: 0.25rem 0.75rem;
     border-radius: 999px;
     margin-bottom: 1.2rem;
     animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -255,7 +255,7 @@
 
   @keyframes float {
     0%, 100% { transform: translateY(0); }
-    50%       { transform: translateY(-6px); }
+    50%       { transform: translateY(-0.4rem); }
   }
 
   @keyframes pulse {
@@ -271,7 +271,7 @@
 
   @keyframes stars {
     0%   { opacity: 0; transform: translateY(0) scale(0); }
-    50%  { opacity: 1; transform: translateY(-28px) scale(1.2); }
-    100% { opacity: 0; transform: translateY(-52px) scale(0); }
+    50%  { opacity: 1; transform: translateY(-1.75rem) scale(1.2); }
+    100% { opacity: 0; transform: translateY(-3.25rem) scale(0); }
   }
 </style>

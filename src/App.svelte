@@ -1,13 +1,16 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition';
   import { sleep } from "@gbagan/utils";
   import RollPhase from "./components/RollPhase.svelte";
   import Scores from "./components/Scores.svelte";
   import ScoreContainer from "./components/ScoreContainer.svelte";
+  import { onMount } from 'svelte';
   
-  type Phase = "roll" | "stats";
+  type Phase = "home" | "roll" | "stats";
 
   let coins: (0 | 1)[] = $state([]);
-  let phase = $state.raw<Phase>("roll");
+  let phase = $state.raw<Phase>("home");
+  let tid: number;
 
   async function tossCoin(coin: 0 | 1) {
     coins.push(coin);
@@ -16,11 +19,28 @@
   function reset() {
     phase = "roll";
     coins.length = 0;
+    resetTimer();
   }
 
   async function nextPhase() {
     await sleep(2000);
     phase = "stats";
+    resetTimer();
+  }
+
+  onMount(() => {
+    tid = setTimeout(() => {
+      phase = "home";
+      coins.length = 0;
+    }, 60000)
+  });
+
+  function resetTimer() {
+    clearTimeout(tid);
+    tid = setTimeout(() => {
+      phase = "home";
+      coins.length = 0;
+    }, 60000);
   }
 
   /*
@@ -41,10 +61,30 @@
   */
 </script>
 
-{#if phase === "roll"}
-  <RollPhase {coins} {tossCoin} {reset} {nextPhase} />
+<svelte:window onclick={resetTimer} />
+{#if phase === "home"}
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="home" transition:fade onclick={() => phase="roll"}></div>
+{:else if phase === "roll"}
+  <div transition:fade>
+    <RollPhase {coins} {tossCoin} {reset} {nextPhase} />
+  </div>
 {:else}
-  <ScoreContainer>
-    <Scores {coins} {reset} />
-  </ScoreContainer>
+  <div transition:fade>
+    <ScoreContainer>
+      <Scores {coins} {reset} />
+    </ScoreContainer>
+  </div>
 {/if}
+
+<style>
+  .home {
+    height: 100vh;
+    width: 100vw;
+    background: url("./home.avif");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+</style>

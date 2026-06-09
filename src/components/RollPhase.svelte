@@ -68,20 +68,20 @@
       style:transform="translate(50px, 480px)"
     />
     <image
-      href={coins.length === 0 ? "./empty-basket.avif" : "./full-basket.avif"}
-      width="120"
-      height="120"
-      style:cursor="pointer"
-      style:transform="translate(400px, 480px)"
-      onclick={reset}
-    />
-    <image
       href="./face.avif"
       width="120"
       height="120"
       style:transform="translate(750px, 480px)"
       style:cursor="pointer"
       onclick={() => tossCoin(1)}
+    />
+    <image
+      href={coins.length === 0 ? "./empty-basket.avif" : "./full-basket.avif"}
+      width="120"
+      height="120"
+      style:cursor="pointer"
+      style:transform="translate(400px, 480px)"
+      onclick={reset}
     />
     {#each range(0, COINS_LENGTH) as i}
       {@const [y, x] = divMod(i, 20)}
