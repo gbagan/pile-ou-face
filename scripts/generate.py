@@ -80,8 +80,7 @@ def run_thresholds(n):
         if pr(n, i) >= 0.01 and pr(n, i+1) < 0.01:
             or_ = min(i + 0.5, n)
             break
-    m = min(n, 17)
-    return (ro/m, ov/m, vo/m, or_/m)
+    return (ro, ov, vo, or_)
 
 print("export const runThresholds: [number, number, number, number][] = [");
 print("  [0, 0, 1, 1],")

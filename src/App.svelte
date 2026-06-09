@@ -1,10 +1,8 @@
 <script lang="ts">
   import { sleep } from "@gbagan/utils";
-  //import { Draw } from "./lib/draw.svelte";
   import RollPhase from "./components/RollPhase.svelte";
-  import StatsPhase from "./components/StatsPhase.svelte";
-    import Test from "./components/Test.svelte";
-    import Scores from "./components/Scores.svelte";
+  import Scores from "./components/Scores.svelte";
+  import ScoreContainer from "./components/ScoreContainer.svelte";
   
   type Phase = "roll" | "stats";
 
@@ -38,15 +36,14 @@
       }
     }
     locked = false;
-    <RollPhase {coins} {tossCoin} {reset} {nextPhase} />
   }
   */
 </script>
 
 {#if phase === "roll"}
-  <Scores>
-    <Test />
-  </Scores>
+  <RollPhase {coins} {tossCoin} {reset} {nextPhase} />
 {:else}
-  <StatsPhase {coins} />
+  <ScoreContainer>
+    <Scores {coins} />
+  </ScoreContainer>
 {/if}

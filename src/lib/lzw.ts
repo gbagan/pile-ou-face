@@ -19,14 +19,3 @@ export function lzw(coins: (0 | 1)[]) {
   }
   return counter;
 }
-
-let arr = [];
-for (let i = 0; i < 10000; i++) {
-  const random = new Uint32Array(100);
-  crypto.getRandomValues(random);
-  arr.push(lzw([...random].map(v => v % 2 as 0 | 1)));
-}
-let t = Object.groupBy(arr, x => ""+x);
-for (const x in t) {
-  console.log(x, t[x]!.length)
-}

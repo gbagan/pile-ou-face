@@ -42,7 +42,7 @@
 
   let starIds = 0;
 
-  function spawnStars(count: number) {
+  async function spawnStars(count: number) {
     const newStars: Star[] = times(count, () => ({
       id:    starIds++,
       x:     Math.max(2, Math.min(98, pct + (Math.random() - 0.5) * 8)),
@@ -51,10 +51,9 @@
       delay: Math.random() * 0.4,
     }));
     stars = [...stars, ...newStars];
-    setTimeout(() => {
-      const ids = new Set(newStars.map(s => s.id))
-      stars = stars.filter(s => !ids.has(s.id))
-    }, 1200);
+    await sleep(1200);
+    const ids = new Set(newStars.map(s => s.id))
+    stars = stars.filter(s => !ids.has(s.id))
   }
 
   onMount(async () => {
@@ -66,8 +65,6 @@
       await sleep(1100);
     }
   });
-
-  $inspect(scr);
 </script>
 
 <div class="wrapper">
@@ -124,8 +121,9 @@
 
 <style>
   .wrapper {
-    padding: 1.5rem 1rem 2rem;
-    width: 400px;
+    padding: 1.5rem 1rem 1rem;
+    width: 25rem;
+    height: 12rem;
     margin: 0 auto;
     font-family: var(--font-sans, system-ui, sans-serif);
     background: rgba(255, 255, 255, 0.7);

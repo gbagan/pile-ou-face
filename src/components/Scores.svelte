@@ -1,166 +1,149 @@
-
 <script lang="ts">
-  import { times } from '@gbagan/utils';
-  import { onMount, type Snippet } from 'svelte'
- 
+  import { count, divMod } from "@gbagan/utils";
+  import Score from "./Score.svelte";
+  import { Markov } from "../lib/markov";
+  import { lzw } from "../lib/lzw";
+
   type Props = {
-    children: Snippet;
+    coins: (0 | 1)[];
   }
 
-  type Point = {
-    x: number;
-    y: number;
-  }
+  let { coins }: Props = $props();
 
-  type Particle = {
-    x: number;
-    y: number;
-    vx: number;
-    vy: number;
-    r: number;
-    col: string;
-    a: number;
-    tail: Point[];
-  }
+  let headsRate = $derived(count(coins, c => c === 1) / coins.length);
 
-  type Star = {
-    x: number;
-    y: number;
-    r: number
-    a: number
-    sp: number;
-  }
+  let headsScore = $derived(
+    headsRate >= .43 && headsRate <= .57
+    ? 100
+    : headsRate >= .41 && headsRate <= .59
+    ? 75
+    : headsRate >= .35 && headsRate <= .65
+    ? 50
+    : 25
+  );
 
-  let { children }: Props = $props();
-
-  let canvas: HTMLCanvasElement;
- 
-  const BG1  = '#1A1640'
-  const BG2  = '#0D0B28'
-  const COLS = ['#7F77DD','#534AB7','#AFA9EC','#5DCAA5','#D85A30','#FAC775']
- 
-  onMount(() => {
-    const ctx = canvas.getContext('2d')!;
-    let W = 0;
-    let H = 0;
-    let stars: Star[] = [];
-    let particles: Particle[] = [];
-    let raf: number;
- 
-    function makeParticle(fromBottom = false): Particle {
-      const side = Math.random() < .5 ? 'left' : 'right';
-      return {
-        x:   fromBottom ? Math.random() * W : (side === 'left' ? -20 : W + 20),
-        y:   fromBottom ? H + 20 : Math.random() * H,
-        vx:  (Math.random() * .6 + .2) * (side === 'left' ? 1 : -1),
-        vy:  -(Math.random() * .5 + .2),
-        r:   Math.random() * 4 + 2,
-        col: COLS[Math.floor(Math.random() * COLS.length)],
-        a:   Math.random() * .5 + .2,
-        tail: [],
+  let largestSequence = $derived.by(() => {
+    let currentSequence = 0;
+    let largest = 0;
+    let previousCoin: 0 | 1 | null = null;
+    for (const coin of coins) {
+      if (coin !== previousCoin) {
+        currentSequence = 1;
+      } else {
+        currentSequence++;
       }
+      largest = Math.max(largest, currentSequence);
+      previousCoin = coin;
     }
- 
-    function init() {
-      stars = times(90, () => ({
-        x:  Math.random() * W,
-        y:  Math.random() * H,
-        r:  Math.random() * 1.2 + .3,
-        a:  Math.random(),
-        sp: Math.random() * .008 + .003,
-      }));
-      particles = times(28, () => makeParticle());
-    }
- 
-    function resize() {
-      W = canvas.offsetWidth;
-      H = canvas.offsetHeight;
-      canvas.width  = W * devicePixelRatio;
-      canvas.height = H * devicePixelRatio;
-      ctx.scale(devicePixelRatio, devicePixelRatio);
-      init()
-    }
- 
-    function draw() {
-      ctx.clearRect(0, 0, W, H)
- 
-      const grd = ctx.createLinearGradient(0, 0, 0, H)
-      grd.addColorStop(0, BG1)
-      grd.addColorStop(1, BG2)
-      ctx.fillStyle = grd
-      ctx.fillRect(0, 0, W, H)
- 
-      for (const s of stars) {
-        s.a += s.sp
-        ctx.beginPath()
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(255,255,255,${.25 + .4 * Math.abs(Math.sin(s.a))})`
-        ctx.fill()
+    return largest;
+  });
+
+  let longRunScore = $derived(
+    largestSequence >= 5 && largestSequence <= 10
+    ? 100
+    : largestSequence >= 4 && largestSequence <= 13
+    ? 75
+    : largestSequence >= 3 && largestSequence <= 14
+    ? 50
+    : 25
+  );
+
+  let compressionScore = $derived.by(() => {
+    const n = lzw(coins);
+    return n >= 34
+    ? 100
+    : n >= 33
+    ? 75
+    : n >= 32
+    ? 50
+    : 25
+  });
+
+  let predictedRate = $derived.by(() => {
+    let counter = 0;
+    let markov1 = new Markov(1);
+    let markov2 = new Markov(2);
+    let markov3 = new Markov(3);
+    for (const coin of coins) {
+      let prediction = markov3.predict() ?? markov2.predict() ?? markov1.predict() ?? 0; 
+      if (coin === prediction) {
+        counter += 1;
       }
- 
-      for (const p of particles) {
-        p.tail.push({ x: p.x, y: p.y })
-        if (p.tail.length > 14) p.tail.shift()
- 
-        for (let i = 1; i < p.tail.length; i++) {
-          const t = i / p.tail.length
-          ctx.beginPath()
-          ctx.moveTo(p.tail[i - 1].x, p.tail[i - 1].y)
-          ctx.lineTo(p.tail[i].x, p.tail[i].y)
-          ctx.strokeStyle = p.col + Math.floor(t * p.a * 120).toString(16).padStart(2, '0')
-          ctx.lineWidth = p.r * t * .7
-          ctx.stroke()
-        }
- 
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = p.col + Math.floor(p.a * 200).toString(16).padStart(2, '0')
-        ctx.fill()
- 
-        p.x += p.vx
-        p.y += p.vy
-        if (p.x < -30 || p.x > W + 30 || p.y < -30) Object.assign(p, makeParticle(true))
-      }
- 
-      raf = requestAnimationFrame(draw)
+      markov1.update(coin);
+      markov2.update(coin);
+      markov3.update(coin);
     }
- 
-    const ro = new ResizeObserver(resize)
-    ro.observe(canvas.parentElement!);
-    resize();
-    draw();
- 
-    return () => {
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-    }
-  })
+    return counter / coins.length; 
+  });
+
+  let predictedScore = $derived(
+    predictedRate >= .43 && predictedRate <= .57
+    ? 100
+    : predictedRate >= .41 && predictedRate <= .59
+    ? 75
+    : predictedRate >= .35 && predictedRate <= .65
+    ? 50
+    : 25
+  );
 </script>
- 
+
 <div class="container">
-  <canvas bind:this={canvas}></canvas>
-  <div class="content">
-    {@render children()}
+  <div class="grid">
+    <Score
+      title="Pile {100 - Math.round(100*headsRate)}% / Face {Math.round(100*headsRate)}%"
+      score={headsScore}
+      delay={1000}
+    />
+    <Score
+      title="Plus long run {largestSequence}"
+      score={longRunScore}
+      delay={1000 * (2 + headsScore / 25)}
+    />
+    <Score
+      title="Imprédictibilité {100 - Math.round(100*predictedRate)}%"
+      score={predictedScore}
+      delay={1000 * (3 + (headsScore + longRunScore) / 25)}
+    />
+    <Score
+      title="Incompressibilité"
+      score={compressionScore}
+      delay={1000 * (4 + (headsScore + longRunScore + predictedScore) / 25)}
+    />
+  </div>
+  <div class="coins">
+    <svg viewBox="0 0 200 50">
+      {#each coins as d, i}
+        {@const [y, x] = divMod(i, 20)}
+        <image
+          href={d === 0 ? "./pile.avif" : "./face.avif"}
+          width="8"
+          height="8"
+          class="piece"
+          style:transform="translate({1+10*x}px, {1+10*y}px)"
+        />
+      {/each}
+    </svg>
   </div>
 </div>
- 
+
 <style>
   .container {
-    position: relative;
-    width: 100vw;
-    min-height: 100vh;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin: 1rem;
   }
- 
-  canvas {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
   }
- 
-  .content {
-    position: relative;
-    z-index: 1;
+
+  .coins {
+    width: 60rem;
   }
 </style>
+
