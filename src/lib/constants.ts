@@ -1,0 +1,1 @@
+export const COINS_LENGTH = 100;

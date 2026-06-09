@@ -1,15 +1,10 @@
 export class Markov {
-  #coins: readonly (0 | 1)[];
+  #coins: (0 | 1)[] = [];
   #order: number;
   #table: Map<string, [number, number]> = new Map();
 
-  constructor(order: number, coins: readonly (0 | 1)[]) {
-    this.#coins = coins;
+  constructor(order: number) {
     this.#order = order;
-  }
-
-  reset() {
-    this.#table.clear();
   }
 
   #key() {
@@ -19,8 +14,10 @@ export class Markov {
 
   update(coin: 0 | 1) {
     const key = this.#key();
+    this.#coins.push(coin);
     if (key === null) return;
     this.#table.getOrInsert(key, [0, 0])[coin]++;
+
   }
 
   predict(): 0 | 1 | null {
