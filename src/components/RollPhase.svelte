@@ -23,19 +23,49 @@
       nextPhase();
     }
   }
+
+  function handleKeydown(e: KeyboardEvent) {
+    if (e.key === "ArrowLeft") {
+      tossCoin(0);
+    } else if (e.key === "ArrowRight") {
+      tossCoin(1);
+    }
+  }
 </script>
+
+<svelte:document onkeydown={handleKeydown} />
 
 <div class="app">
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <!-- svelte-ignore a11y_click_events_have_key_events -->
   <svg viewBox="0 0 950 610">
+    <text
+      x="475"
+      y="60"
+      text-anchor="middle"
+      fill="var(--amber-100)"
+      font-family="Shantell Sans"
+      font-size="50"
+    >
+      Pile ou Face
+    </text>
+    <text
+      x="475"
+      y="110"
+      text-anchor="middle"
+      fill="var(--amber-100)"
+      font-family="Shantell Sans"
+      font-size="20"
+    >
+      Essaie de générer une séquence de pile ou face la plus aléatoire possible
+    </text>
     <image
       href="./pile.avif"
       width="120"
       height="120"
       style:cursor="pointer"
-      style:transform="translate(50px, 480px)"
       onclick={() => tossCoin(0)}
+      style:transform="translate(50px, 480px)"
     />
     <image
       href={coins.length === 0 ? "./empty-basket.avif" : "./full-basket.avif"}
@@ -71,8 +101,8 @@
         i !== currentCoin
         ? `translate(${31+45*x}px, ${175+45*y}px) scale(0.25)`
         : d === 0
-        ? "translate(300px, 480px) scale(1)"
-        : "translate(500px, 480px) scale(1)"
+        ? "translate(50px, 480px) scale(1)"
+        : "translate(750px, 480px) scale(1)"
       }
       <image
         href={d === 0 ? "./pile.avif" : "./face.avif"}

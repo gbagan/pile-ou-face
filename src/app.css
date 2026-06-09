@@ -1,5 +1,13 @@
 @import "./base.css";
 
+@font-face {
+  font-family: 'Shantell Sans';
+  src: url('./fonts/Shantell_Sans-Informal_Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #fff;
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -13,4 +21,11 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  font-size: 2vmin;
+}
+
+body, html {
+  user-select: none;
+  
 }

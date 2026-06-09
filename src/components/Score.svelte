@@ -6,6 +6,7 @@
     title: string;
     score: number;
     delay: number;
+    onclick: () => void;
   }
 
   type Star = {
@@ -16,7 +17,7 @@
     delay: number;
   }
 
-  let { title, score, delay }: Props = $props();
+  let { title, score, delay, onclick }: Props = $props();
   let scr = $state.raw(0);
 
   const LEVELS = [
@@ -67,7 +68,9 @@
   });
 </script>
 
-<div class="wrapper">
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div class="wrapper" {onclick}>
   <div class="header">
     <div class="player">
       <div class="avatar" style="background:{level.color}">
@@ -128,6 +131,7 @@
     font-family: var(--font-sans, system-ui, sans-serif);
     background: rgba(255, 255, 255, 0.7);
     border-radius: 1rem;
+    cursor: pointer;
   }
 
   .header {

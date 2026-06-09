@@ -1,14 +1,22 @@
 <script lang="ts">
-  import { count, divMod } from "@gbagan/utils";
+  import { count, divMod, sleep } from "@gbagan/utils";
+  import { IconRefresh } from '@tabler/icons-svelte';
   import Score from "./Score.svelte";
   import { Markov } from "../lib/markov";
   import { lzw } from "../lib/lzw";
+  import Button from "./Button.svelte";
+  import { onMount } from "svelte";
+    import Dialog from "./Dialog.svelte";
 
   type Props = {
     coins: (0 | 1)[];
+    reset: () => void;
   }
 
-  let { coins }: Props = $props();
+  let { coins, reset }: Props = $props();
+  let locked = $state.raw(true);
+  let dialog: "A" | "B" | "C" | "D" | null = $state.raw(null);
+  let dialogEl: HTMLDialogElement;
 
   let headsRate = $derived(count(coins, c => c === 1) / coins.length);
 
@@ -85,6 +93,27 @@
     ? 50
     : 25
   );
+
+  function openDialog(d: "A" | "B" | "C" | "D") {
+    dialog = d;
+    dialogEl.showModal();
+  }
+
+  function closeDialog() {
+    dialogEl.close();
+    dialog = null;
+  }
+
+  async function restart() {
+    if (locked) return;
+    await sleep(1000);
+    reset();
+  }
+
+  onMount(async () => {
+    await sleep(1000 * (5 + (headsScore + longRunScore + predictedScore + compressionScore) / 25));
+    locked = false;
+  });
 </script>
 
 <div class="container">
@@ -93,21 +122,25 @@
       title="Pile {100 - Math.round(100*headsRate)}% / Face {Math.round(100*headsRate)}%"
       score={headsScore}
       delay={1000}
+      onclick={() => openDialog("A")}
     />
     <Score
       title="Plus long run {largestSequence}"
       score={longRunScore}
       delay={1000 * (2 + headsScore / 25)}
+      onclick={() => openDialog("B")}
     />
     <Score
       title="Imprédictibilité {100 - Math.round(100*predictedRate)}%"
       score={predictedScore}
       delay={1000 * (3 + (headsScore + longRunScore) / 25)}
+      onclick={() => openDialog("C")}
     />
     <Score
       title="Incompressibilité"
       score={compressionScore}
       delay={1000 * (4 + (headsScore + longRunScore + predictedScore) / 25)}
+      onclick={() => openDialog("D")}
     />
   </div>
   <div class="coins">
@@ -124,10 +157,46 @@
       {/each}
     </svg>
   </div>
+  <Button
+    variant="teal"
+    onclick={restart}
+    disabled={locked}
+  >
+    <IconRefresh stroke={2} /> Nouvelle partie
+  </Button>
 </div>
+<dialog class="dialog" bind:this={dialogEl}>
+  {#if dialog === "A"}
+    <Dialog title="Piles/Faces" onOk={closeDialog}>
+      Au hasard, piles et faces finissent toujours par s'équilibrer autour de 50% 🪙 <br/>
+      Et plus tu lances, plus cet équilibre se confirme — c'est la loi des grands nombres !
+    </Dialog>
+  {:else if dialog === "B"}
+    <Dialog title="Plus long run" onOk={closeDialog}>
+      Un run, c'est une série de piles ou de faces à la suite — genre pile, pile, pile, pile 🏃<br/>
+      Sur 100 lancers au hasard, le record de la partie se situe presque toujours entre 5 et 10.<br/>
+      En dessous ou au-dessus ? Ta séquence cache peut-être quelque chose… 🧐
+    </Dialog>
+  {:else if dialog === "C"}
+    <Dialog title="Imprédictibilité" onOk={closeDialog}>
+      L'appli espione tes lancers pour essayer de deviner le prochain 🔮 <br/>
+      Mais si tu joues vraiment au hasard, elle ne fait pas mieux qu'un pile ou face… à 50/50 !
+    </Dialog>
+  {:else if dialog === "D"}
+    <Dialog title="Incompressibilité" onOk={closeDialog}>
+      Imagine qu'on essaie de "zipper" ta séquence 🗜️ <br/>
+      Si elle est vraiment aléatoire, impossible de la raccourcir — taux de compression : 0%.<br/>
+      Dès qu'il y a des répétitions, ça se compresse… et ça se voit !<br/>
+      L'algorithme utilisé ici : Lempel-Ziv-Welch.
+    </Dialog>
+  {/if}
+</dialog>
+
+
 
 <style>
   .container {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -144,6 +213,54 @@
 
   .coins {
     width: 60rem;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .buttons > .btn {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(175,169,236,.35);
+    background: transparent;
+    color: #AFA9EC;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s;
+
+    &:hover, &:active {
+      background: #7F77DD;
+      color: #fff;
+      border-color: #7F77DD;
+    }
+  }
+
+  .dialog {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: max-content;
+    background: #0D0B28;
+    border: 1.5px solid #534AB7;
+    border-radius: 20px;
+    padding: 0;
+    overflow: hidden;
+    /* animation: popIn .35s cubic-bezier(.34,1.56,.64,1); */
+  }
+
+  .dialog::backdrop {
+    background-color: rgb(107 114 128 / 0.7);
+  }
+
+  @keyframes popIn {
+    from { transform: scale(.8); opacity: 0; }
+    to   { transform: scale(1);  opacity: 1; }
   }
 </style>
 

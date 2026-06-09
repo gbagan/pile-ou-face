@@ -19,6 +19,7 @@
     "vite": "^8.0.16"
   },
   "dependencies": {
-    "@gbagan/utils": "^1.6.0"
+    "@gbagan/utils": "^1.6.0",
+    "@tabler/icons-svelte": "^3.44.0"
   }
 }

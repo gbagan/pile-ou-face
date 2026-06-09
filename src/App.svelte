@@ -14,6 +14,7 @@
   }
 
   function reset() {
+    phase = "roll";
     coins.length = 0;
   }
 
@@ -44,6 +45,6 @@
   <RollPhase {coins} {tossCoin} {reset} {nextPhase} />
 {:else}
   <ScoreContainer>
-    <Scores {coins} />
+    <Scores {coins} {reset} />
   </ScoreContainer>
 {/if}
