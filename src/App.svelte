@@ -82,7 +82,7 @@
   .home {
     height: 100vh;
     width: 100vw;
-    background: url("./home.avif");
+    background: url("../home.avif");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

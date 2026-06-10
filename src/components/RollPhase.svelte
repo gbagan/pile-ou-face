@@ -57,7 +57,7 @@
       font-family="Shantell Sans"
       font-size="20"
     >
-      Essaie de générer une séquence de pile ou face la plus aléatoire possible
+      À toi de jouer ! 🪙 Clique sur pile ou face au hasard… ou du moins, essaie !
     </text>
     <image
       href="./pile.avif"

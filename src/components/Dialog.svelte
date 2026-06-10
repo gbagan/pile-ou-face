@@ -12,11 +12,11 @@
   let { title, emoji, children, onOk }: Props = $props();
 </script>
 
-<div class="dialog-header">
+<div class="header">
   <p class="emoji">{emoji}</p>
-  <p class="dialog-title">{title}</p>
+  <p class="title">{title}</p>
 </div>
-<div class="dialog-body">
+<div class="body">
   {@render children()}
 </div>
 <div class="buttons">
@@ -24,7 +24,7 @@
 </div>
 
 <style>
-  .dialog-header {
+  .header {
     padding: 1.25rem 1.25rem 1rem;
     display: flex;
     flex-direction: column;
@@ -40,42 +40,31 @@
 
   @keyframes bounce {
     0%,100% { transform: translateY(0); }
-    50%      { transform: translateY(-8px); }
+    50%      { transform: translateY(-0.5rem ); }
   }
 
-  .dialog-title {
+  .title {
     font-size: 1.6rem;
     font-weight: 500;
     color: var(--slate-100);
     font-family: "Shantell Sans";
   }
 
-.dialog-subtitle {
-  font-size: 14px;
-  color: #AFA9EC;
-  font-family: inherit;
-}
-
-.dialog-body {
-  width: 65vmin;
-  padding: 0 1.25rem 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  color: var(--slate-100);
-  font-family: "Shantell Sans";
-  font-size: 1.1rem;
-}
+  .body {
+    width: 65vmin;
+    padding: 0 1.25rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: var(--slate-100);
+    font-family: "Shantell Sans";
+    font-size: 1.1rem;
+  }
 
   .buttons {
     padding: 1rem;
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
-  }
-
-  @keyframes bounce {
-    0%,100% { transform: translateY(0); }
-    50%      { transform: translateY(-0.5rem); }
   }
 </style>

@@ -152,8 +152,7 @@
           href={d === 0 ? "./pile.avif" : "./face.avif"}
           width="8"
           height="8"
-          class="piece"
-          style:transform="translate({1+10*x}px, {1+10*y}px)"
+          style:transform="translate({10*x+1}px, {10*y+1}px)"
         />
       {/each}
     </svg>
