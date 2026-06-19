@@ -1,6 +1,7 @@
 <script lang="ts">
   import { sleep, times } from "@gbagan/utils";
   import { onMount } from "svelte";
+    import { fade } from "svelte/transition";
 
   type Props = {
     title: string;
@@ -19,6 +20,7 @@
 
   let { title, score, delay, onclick }: Props = $props();
   let scr = $state.raw(0);
+  let showMoreInfo = $state.raw(false);
 
   const LEVELS = [
     { min: 0,   max: 24,  label: 'Niveau 1 — Débutant',     color: '#888780', emoji: '🐣' },
@@ -65,6 +67,7 @@
       spawnStars(scr >= 100 ? 12 : 4);
       await sleep(1100);
     }
+    showMoreInfo = true;
   });
 </script>
 
@@ -120,10 +123,16 @@
       {MILESTONES[scr]}
     </div>
   {/if}
+  {#if showMoreInfo}
+    <div class="more-info" transition:fade>
+      Clique pour plus d'info!
+    </div>
+  {/if}
 </div>
 
 <style>
   .wrapper {
+    position: relative;
     padding: 1.5rem 1rem 1rem;
     width: 25rem;
     height: 12rem;
@@ -251,6 +260,15 @@
     margin-bottom: 1.2rem;
     animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     transition: background 0.3s, color 0.3s;
+  }
+
+  .more-info {
+    position: absolute;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-left: 10rem;
+    right: 1rem;
+    bottom: 1rem;
   }
 
   @keyframes float {
