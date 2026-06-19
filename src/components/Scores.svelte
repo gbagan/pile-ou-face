@@ -192,8 +192,6 @@
   {/if}
 </dialog>
 
-
-
 <style>
   .container {
     position: relative;
@@ -221,9 +219,9 @@
     top: 50%;
     transform: translate(-50%, -50%);
     width: max-content;
-    background: #0D0B28;
-    border: 1.5px solid #534AB7;
-    border-radius: 20px;
+    background: var(--indigo-950);
+    border: 1.5px solid var(--violet-700);
+    border-radius: 1rem;
     padding: 0;
     overflow: hidden;
     animation: popIn .35s cubic-bezier(.34,1.56,.64,1);

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { sleep, times } from "@gbagan/utils";
   import { onMount } from "svelte";
-    import { fade } from "svelte/transition";
+  import { fade } from "svelte/transition";
 
   type Props = {
     title: string;
@@ -23,12 +23,22 @@
   let showMoreInfo = $state.raw(false);
 
   const LEVELS = [
+    { min: 0,   max: 24,  label: 'Niveau 1 — Débutant',     color: 'var(--stone-400)', emoji: '🐣' },
+    { min: 25,  max: 49,  label: 'Niveau 2 — Apprenti',     color: 'var(--blue-500)', emoji: '⚡' },
+    { min: 50,  max: 74,  label: 'Niveau 3 — Confirmé',     color: 'var(--emerald-600)', emoji: '🔥' },
+    { min: 75,  max: 99,  label: 'Niveau 4 — Expert',       color: 'var(--orange-600)', emoji: '💥' },
+    { min: 100, max: 100, label: 'NIVEAU MAX — Légendaire !',color: 'var(--violet-500)', emoji: '🏆' },
+  ]
+
+  /*
+  const LEVELS = [
     { min: 0,   max: 24,  label: 'Niveau 1 — Débutant',     color: '#888780', emoji: '🐣' },
     { min: 25,  max: 49,  label: 'Niveau 2 — Apprenti',     color: '#378ADD', emoji: '⚡' },
     { min: 50,  max: 74,  label: 'Niveau 3 — Confirmé',     color: '#1D9E75', emoji: '🔥' },
     { min: 75,  max: 99,  label: 'Niveau 4 — Expert',       color: '#D85A30', emoji: '💥' },
     { min: 100, max: 100, label: 'NIVEAU MAX — Légendaire !',color: '#7F77DD', emoji: '🏆' },
   ]
+  */
 
   const MILESTONES: Record<number, string> = {
     25:  '25 pts — Premier palier !',
@@ -94,10 +104,15 @@
     <div class="bar-track">
       <div
         class="bar-fill"
-        style="width:{barW}%; background:{level.color}; --glow:{level.color}66"
+        style:width="{barW}%"
+        style:background={level.color}
+        style:--glow="color-mix(in srgb, {level.color} 40%, transparent)"
       >
         {#if currentScore > 0}
-          <div class="orb" style="background:{level.color}; box-shadow:0 0 10px 3px {level.color}66">
+          <div
+            class="orb"
+            style:background={level.color}
+          >
             {level.emoji}
           </div>
         {/if}
@@ -119,7 +134,11 @@
   </div>
 
   {#if MILESTONES[currentScore]}
-    <div class="milestone" style="background:{level.color}22; color:{level.color}">
+    <div
+      class="milestone"
+      style:background="color-mix(in srgb, {level.color} 13%, transparent)"
+      style:color={level.color}
+    >
       {MILESTONES[currentScore]}
     </div>
   {/if}
@@ -233,6 +252,7 @@
     font-size: 1.1rem;
     z-index: 2;
     transition: background 0.4s, box-shadow 0.4s;
+    box-shadow: 0 0 10px 3px var(--glow);
   }
 
   .star {
@@ -248,7 +268,7 @@
     margin-top: 5px;
     padding: 0 2px;
     font-size: 0.7rem;
-    color: var(--color-text-tertiary, #999);
+    color: #999;
   }
 
   .milestone {
