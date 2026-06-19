@@ -203,9 +203,9 @@
 
   .bar-track {
     position: relative;
-    height: 1.75rem;
     background: var(--color-background-secondary, #f0f0f0);
     border-radius: 999px;
+    height: 1.75rem;
     border: 0.5px solid var(--color-border-tertiary, rgba(0,0,0,.12));
     overflow: visible;
   }
@@ -269,6 +269,7 @@
     margin-left: 10rem;
     right: 1rem;
     bottom: 1rem;
+    animation: float 2s ease-in-out infinite;
   }
 
   @keyframes float {
