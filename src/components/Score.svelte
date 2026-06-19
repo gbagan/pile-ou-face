@@ -19,7 +19,7 @@
   }
 
   let { title, score, delay, onclick }: Props = $props();
-  let scr = $state.raw(0);
+  let currentScore = $state.raw(0);
   let showMoreInfo = $state.raw(false);
 
   const LEVELS = [
@@ -37,9 +37,9 @@
     100: 'SCORE PARFAIT ! 🏆',
   }
 
-  const level = $derived(LEVELS.find(l => scr >= l.min && scr <= l.max) ?? LEVELS[0])
-  const pct   = $derived(Math.max(0, Math.min(100, scr)))
-  const barW  = $derived(scr === 0 ? 0 : Math.max(4, pct))
+  const level = $derived(LEVELS.find(l => currentScore >= l.min && currentScore <= l.max) ?? LEVELS[0])
+  const pct   = $derived(Math.max(0, Math.min(100, currentScore)))
+  const barW  = $derived(currentScore === 0 ? 0 : Math.max(4, pct))
 
   let stars: Star[] = $state.raw([]);
 
@@ -60,11 +60,11 @@
   }
 
   onMount(async () => {
-    scr = 0;
+    currentScore = 0;
     await sleep(delay);
-    while (scr < score) {
-      scr = scr+25;
-      spawnStars(scr >= 100 ? 12 : 4);
+    while (currentScore < score) {
+      currentScore = currentScore+25;
+      spawnStars(currentScore >= 100 ? 12 : 4);
       await sleep(1100);
     }
     showMoreInfo = true;
@@ -76,16 +76,16 @@
 <div class="wrapper" {onclick}>
   <div class="header">
     <div class="player">
-      <div class="avatar" style="background:{level.color}">
+      <div class="avatar" style:background={level.color}>
         {level.emoji}
       </div>
       <div>
         <div class="player-name">{title}</div>
-        <div class="level-label" style="color:{level.color}">{level.label}</div>
+        <div class="level-label" style:color={level.color}>{level.label}</div>
       </div>
     </div>
     <div class="score-block">
-      <div class="score-display" style="color:{level.color}">{scr}</div>
+      <div class="score-display" style:color={level.color}>{currentScore}</div>
       <div class="score-max">/ 100 pts</div>
     </div>
   </div>
@@ -96,7 +96,7 @@
         class="bar-fill"
         style="width:{barW}%; background:{level.color}; --glow:{level.color}66"
       >
-        {#if scr > 0}
+        {#if currentScore > 0}
           <div class="orb" style="background:{level.color}; box-shadow:0 0 10px 3px {level.color}66">
             {level.emoji}
           </div>
@@ -118,9 +118,9 @@
     </div>
   </div>
 
-  {#if MILESTONES[scr]}
+  {#if MILESTONES[currentScore]}
     <div class="milestone" style="background:{level.color}22; color:{level.color}">
-      {MILESTONES[scr]}
+      {MILESTONES[currentScore]}
     </div>
   {/if}
   {#if showMoreInfo}
@@ -171,7 +171,7 @@
   .player-name {
     font-weight: 500;
     font-size: 1rem;
-    color: var(--color-text-primary, #111);
+    color: var(--slate-900);
   }
 
   .level-label {
@@ -266,10 +266,10 @@
     position: absolute;
     font-size: 0.8rem;
     font-weight: 500;
-    margin-left: 10rem;
     right: 1rem;
     bottom: 1rem;
-    animation: float 2s ease-in-out infinite;
+    color: var(--slate-800);
+    animation: shake 4s ease-in-out infinite;
   }
 
   @keyframes float {
@@ -292,5 +292,20 @@
     0%   { opacity: 0; transform: translateY(0) scale(0); }
     50%  { opacity: 1; transform: translateY(-1.75rem) scale(1.2); }
     100% { opacity: 0; transform: translateY(-3.25rem) scale(0); }
+  }
+
+  @keyframes shake {
+    0%, 85%, 100% {
+      transform: translateX(0);
+    }
+    86% { transform: translateX(-4px); }
+    88% { transform: translateX(4px); }
+    90% { transform: translateX(-4px); }
+    92% { transform: translateX(4px); }
+    94% { transform: translateX(0); }
+    95% { transform: translateX(0); }
+    96% { transform: translateX(-3px); }
+    97.5% { transform: translateX(3px); }
+    99% { transform: translateX(0); }
   }
 </style>
