@@ -47,7 +47,7 @@
     font-size: 1.6rem;
     font-weight: 500;
     color: var(--slate-100);
-    font-family: "Shantell Sans";
+    font-family: var(--handwritten);
   }
 
   .body {
@@ -57,7 +57,7 @@
     flex-direction: column;
     gap: 10px;
     color: var(--slate-100);
-    font-family: "Shantell Sans";
+    font-family: var(--handwritten);
     font-size: 1.1rem;
   }
 

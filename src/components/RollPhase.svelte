@@ -44,7 +44,7 @@
       y="60"
       text-anchor="middle"
       fill="var(--amber-100)"
-      font-family="Shantell Sans"
+      font-family="var(--handwritten)"
       font-size="50"
     >
       Pile ou Face
@@ -54,7 +54,7 @@
       y="110"
       text-anchor="middle"
       fill="var(--amber-100)"
-      font-family="Shantell Sans"
+      font-family="var(--handwritten)"
       font-size="20"
     >
       À toi de jouer ! 🪙 Clique sur pile ou face au hasard… ou du moins, essaie !

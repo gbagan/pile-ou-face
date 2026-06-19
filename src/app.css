@@ -3,22 +3,17 @@
 @font-face {
   font-family: 'Shantell Sans';
   src: url('./fonts/Shantell_Sans-Informal_Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
 }
 
 :root {
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 
   font-size: 2vmin;
+  font-family: var(--sans);
+  --handwritten: 'Shantell Sans';
 }
 
 body, html {

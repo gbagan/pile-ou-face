@@ -136,7 +136,7 @@
   {#if MILESTONES[currentScore]}
     <div
       class="milestone"
-      style:background="color-mix(in srgb, {level.color} 13%, transparent)"
+      style:background="color-mix(in srgb, {level.color} 15%, transparent)"
       style:color={level.color}
     >
       {MILESTONES[currentScore]}
