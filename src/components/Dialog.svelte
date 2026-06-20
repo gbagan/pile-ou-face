@@ -20,7 +20,7 @@
   {@render children()}
 </div>
 <div class="buttons">
-  <Button onclick={onOk} variant="teal">Ok</Button>
+  <Button onclick={onOk} variant="teal">Compris !</Button>
 </div>
 
 <style>
