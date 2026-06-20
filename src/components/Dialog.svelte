@@ -12,18 +12,51 @@
   let { title, emoji, children, onOk }: Props = $props();
 </script>
 
-<div class="header">
-  <p class="emoji">{emoji}</p>
-  <p class="title">{title}</p>
-</div>
-<div class="body">
-  {@render children()}
-</div>
-<div class="buttons">
-  <Button onclick={onOk} variant="teal">Compris !</Button>
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div class="backdrop" onclick={onOk} >
+  <dialog open onclick={e => e.stopPropagation()}>
+    <div class="header">
+      <p class="emoji">{emoji}</p>
+      <p class="title">{title}</p>
+    </div>
+    <div class="body">
+      {@render children()}
+    </div>
+    <div class="buttons">
+      <Button onclick={onOk} variant="teal">Compris !</Button>
+    </div>
+  </dialog>
 </div>
 
 <style>
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: color-mix(in srgb, var(--slate-900) 55%, transparent);
+    backdrop-filter: blur(3px);
+  }
+  
+  dialog {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: max-content;
+    background: var(--indigo-950);
+    border: 1.5px solid var(--violet-700);
+    border-radius: 1rem;
+    padding: 0;
+    overflow: hidden;
+    animation: popIn .35s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  @keyframes popIn {
+    from { transform: translate(-50%, -50%) scale(.8); opacity: 0; }
+    to   { transform: translate(-50%, -50%) scale(1);  opacity: 1; }
+  }
+
   .header {
     padding: 1.25rem 1.25rem 1rem;
     display: flex;

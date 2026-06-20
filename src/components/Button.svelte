@@ -26,13 +26,13 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 16px 36px;
+    gap: 0.625rem;
+    padding: 1rem 2rem;
     border-radius: 999px;
     border: none;
     cursor: pointer;
     font-family: inherit;
-    font-size: 17px;
+    font-size: 1rem;
     font-weight: 500;
     color: #fff;
     overflow: hidden;
