@@ -55,7 +55,7 @@
     padding: 0 1.25rem 1.25rem;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0.625rem;
     color: var(--slate-100);
     font-family: var(--handwritten);
     font-size: 1.1rem;

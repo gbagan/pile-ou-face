@@ -107,7 +107,6 @@
 
   async function restart() {
     if (locked) return;
-    await sleep(1000);
     reset();
   }
 

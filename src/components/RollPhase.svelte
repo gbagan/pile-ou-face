@@ -117,21 +117,20 @@
 
 <style>
   .app {
+    position: fixed;
     background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
     width: 100vw;
     min-height: 100vh;
   }
 
   svg {
-    display: block;
     width: 100%;
     height: 100vh;
     max-width: 100%;
-    object-fit: contain; /* ou utiliser viewBox */
   }
 
   .piece {
-    transition: transform linear 500ms;
+    transition: transform ease-in 500ms;
     pointer-events: none;
   }
 </style>

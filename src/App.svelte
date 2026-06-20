@@ -1,10 +1,11 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
   import { sleep } from "@gbagan/utils";
+  import { RESET_DELAY_MS } from './lib/constants';
   import RollPhase from "./components/RollPhase.svelte";
   import Scores from "./components/Scores.svelte";
   import ScoreContainer from "./components/ScoreContainer.svelte";
-  import { onMount } from 'svelte';
   
   type Phase = "home" | "roll" | "stats";
 
@@ -32,7 +33,7 @@
     tid = setTimeout(() => {
       phase = "home";
       coins.length = 0;
-    }, 60000)
+    }, RESET_DELAY_MS)
   });
 
   function resetTimer() {
@@ -40,7 +41,7 @@
     tid = setTimeout(() => {
       phase = "home";
       coins.length = 0;
-    }, 60000);
+    }, RESET_DELAY_MS);
   }
 
   /*
@@ -80,6 +81,7 @@
 
 <style>
   .home {
+    position: fixed;
     height: 100vh;
     width: 100vw;
     background: url("../home.avif");

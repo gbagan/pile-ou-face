@@ -1,10 +1,7 @@
 
 <script lang="ts">
-  import { sleep, times } from "@gbagan/utils";
   import type { Snippet } from "svelte";
 
-  const STARS = ['⭐', '✨', '💫', '🌟']
- 
   type Props = {
     children: Snippet;
     variant?: 'violet' | 'teal' | 'ghost';
@@ -13,54 +10,12 @@
     icon?: string;
   }
 
-  type Star = {
-    id: number;
-    glyph: string;
-    tx: string;
-    delay: number;
-  }
-
   let { children, onclick, variant = 'violet', disabled = false, icon }: Props = $props();
- 
-  let stars: Star[] = $state([])
-  let starId = 0
- 
-  async function handleClick(e: MouseEvent) {
-    const btn = e.currentTarget as HTMLElement;
- 
-    // Ripple
-    const ripple = document.createElement('span');
-    ripple.className = 'ripple';
-    const rect = btn.getBoundingClientRect()
-    const size = Math.max(rect.width, rect.height)
-    ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size / 2}px;top:${e.clientY - rect.top - size / 2}px`
-    btn.appendChild(ripple)
-    setTimeout(() => ripple.remove(), 600)
- 
-    // Étoiles
-    const count = 7
-    const newStars = times(count, i => {
-      const angle = (i / count) * 360;
-      const dist  = 55 + Math.random() * 30;
-      const rad   = angle * Math.PI / 180;
-      return {
-        id:    ++starId,
-        glyph: STARS[Math.floor(Math.random() * STARS.length)],
-        tx:    `translate(${Math.cos(rad) * dist}px, ${Math.sin(rad) * dist}px)`,
-        delay: i * 0.03,
-      }
-    });
-    stars = [...stars, ...newStars];
-    onclick?.();
-    await sleep(850);
-    const ids = new Set(newStars.map(s => s.id));
-    stars = stars.filter(s => !ids.has(s.id));
-  }
 </script>
  
 <button
   class="btn btn-{variant}"
-  onclick={handleClick}
+  {onclick}
   {disabled}
 >
   {#if icon}
@@ -69,13 +24,6 @@
     </span>
   {/if}
   {@render children()}
- 
-  {#each stars as s (s.id)}
-    <span
-      class="star"
-      style="--tx:{s.tx}; animation-delay:{s.delay}s"
-    >{s.glyph}</span>
-  {/each}
 </button>
  
 <style>
@@ -128,34 +76,5 @@
     display: flex;
     align-items: center;
     transition: transform .5s cubic-bezier(.34, 1.56, .64, 1);
-  }
- 
-  .btn:hover .icon { transform: rotate(-360deg); }
- 
-  .btn :global(.ripple) {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, .25);
-    transform: scale(0);
-    animation: ripple .55s linear;
-    pointer-events: none;
-  }
- 
-  .star {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    pointer-events: none;
-    font-size: 14px;
-    animation: burst .7s ease forwards;
-  }
- 
-  @keyframes ripple {
-    to { transform: scale(4); opacity: 0; }
-  }
- 
-  @keyframes burst {
-    0%   { opacity: 1; transform: translate(0, 0) scale(.5); }
-    100% { opacity: 0; transform: var(--tx) scale(1.2); }
   }
 </style>

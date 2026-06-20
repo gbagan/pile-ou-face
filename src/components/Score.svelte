@@ -26,10 +26,10 @@
     { min: 0,   max: 24,  label: 'Niveau 1 — Débutant',     color: 'var(--stone-400)', emoji: '🐣' },
     { min: 25,  max: 49,  label: 'Niveau 2 — Apprenti',     color: 'var(--blue-500)', emoji: '⚡' },
     { min: 50,  max: 74,  label: 'Niveau 3 — Confirmé',     color: 'var(--emerald-600)', emoji: '🔥' },
-    { min: 75,  max: 99,  label: 'Niveau 4 — Expert',       color: 'var(--orange-600)', emoji: '💥' },
-    { min: 100, max: 100, label: 'NIVEAU MAX — Légendaire !',color: 'var(--violet-500)', emoji: '🏆' },
+    { min: 75,  max: 99,  label: 'Niveau 4 — Expert',       color: 'var(--violet-500)', emoji: '💥' },
+    { min: 100, max: 100, label: 'NIVEAU MAX — Légendaire !',color: 'var(--amber-600)', emoji: '🏆' },
   ]
-
+  // orange-500
   /*
   const LEVELS = [
     { min: 0,   max: 24,  label: 'Niveau 1 — Débutant',     color: '#888780', emoji: '🐣' },
